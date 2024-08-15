@@ -29,11 +29,5 @@ class MainActivity : AppCompatActivity() {
         case1 = findViewById(R.id.button1)
         case2 = findViewById(R.id.button2)
         case3 = findViewById(R.id.button3)
-        case4 = findViewById(R.id.button4)
-        case5 = findViewById(R.id.button5)
-        case6 = findViewById(R.id.button6)
-        case7 = findViewById(R.id.button7)
-        case8 = findViewById(R.id.button8)
-        case9 = findViewById(R.id.button9)
     }
 }
