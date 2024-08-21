@@ -3,11 +3,13 @@ package com.example.tic_tac_toe
 import android.graphics.Color
 import android.os.Bundle
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.textfield.TextInputEditText
 
 class MainActivity : AppCompatActivity() {
     private lateinit var case0: Button
@@ -20,9 +22,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var case7: Button
     private lateinit var case8: Button
     private lateinit var start: Button
+    private lateinit var player1Name: String
+    private lateinit var player2Name: String
+    private lateinit var playerTurnView: TextView
+
     private val grid = Array(3) { Array(3) { 0 } }
-    private var lastPlay = "X"
-    private var win = false
+    private var win = true
+    private var firstStart = true
+    private var turnCount = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -42,6 +49,7 @@ class MainActivity : AppCompatActivity() {
         case7 = findViewById(R.id.button7)
         case8 = findViewById(R.id.button8)
         start = findViewById(R.id.start)
+        playerTurnView = findViewById(R.id.turnView)
 
         case0.setOnClickListener {
             gridClick(case0,0,0)
@@ -71,10 +79,30 @@ class MainActivity : AppCompatActivity() {
             gridClick(case8,2,2)
         }
         start.setOnClickListener {
-            reset()
+            if(firstStart) initialStart() else reset()
+
         }
     }
+    private fun initialStart(){
+        val player1NameInput = findViewById<TextInputEditText>(R.id.player1Name)
+        val player2NameInput = findViewById<TextInputEditText>(R.id.player2Name)
+        player1Name = player1NameInput.text.toString()
+        player2Name = player2NameInput.text.toString()
+        if(player1Name.isNotEmpty() && player2Name.isNotEmpty()){
+            start.text = "RESET"
+            player1NameInput.isEnabled = false
+            player2NameInput.isEnabled = false
+            win = false
+            firstStart = false
+            playerTurn()
+
+        }else{
+            Toast.makeText(this@MainActivity, "Enter players name", Toast.LENGTH_LONG).show()
+        }
+
+    }
     private fun reset(){
+
         for (row in grid.indices) {
             for (col in grid[row].indices) {
                 grid[row][col] = 0
@@ -90,22 +118,25 @@ class MainActivity : AppCompatActivity() {
         case7.setText("")
         case8.setText("")
         win = false
+        start.text = "RESET"
+        turnCount = 0
+        playerTurn()
     }
     private fun gridClick(button: Button, index0: Int, index1: Int) {
         if (grid[index0][index1] != 0 || win) {
             return
         }
-        if(lastPlay == "X" ) {
-            button.setText("O")
-            grid[index0][index1] = 1
-            lastPlay = "O"
-        }else{
+        if(turnCount % 2 == 0 ) {
             button.setText("X")
+            grid[index0][index1] = 1
+        }else{
+            button.setText("O")
             grid[index0][index1] = -1
-            lastPlay = "X"
         }
+        turnCount++
         drawCheck()
         winCheck()
+        playerTurn()
     }
     private fun drawCheck (){
         var gridFull = 0
@@ -147,15 +178,31 @@ class MainActivity : AppCompatActivity() {
         countCheck(count)
     }
     private fun countCheck(count: Int){
-        if(count == -3){
-            Toast.makeText(this@MainActivity, "WIN Player 1", Toast.LENGTH_SHORT).show()
+        var player1Win = "Winner is " + player1Name
+        var player2Win = "Winner is " + player2Name
+        if(count == 3){
+            Toast.makeText(this@MainActivity,player1Win , Toast.LENGTH_SHORT).show()
             win = true
+            start.text = "RESTART"
             return
         }
-        if(count == 3){
-            Toast.makeText(this@MainActivity, "WIN Player 2", Toast.LENGTH_SHORT).show()
+        if(count == -3){
+            Toast.makeText(this@MainActivity, player2Win, Toast.LENGTH_SHORT).show()
             win = true
+            start.text = "RESTART"
+            var player1Temp = player1Name
+            player1Name = player2Name
+            player2Name = player1Temp
             return
+        }
+    }
+    private fun playerTurn(){
+        if(turnCount % 2 == 0){
+            var turn = "current player: $player1Name"
+            playerTurnView.text = turn
+        }else{
+            var turn = "current player: $player2Name"
+            playerTurnView.text = turn
         }
     }
 

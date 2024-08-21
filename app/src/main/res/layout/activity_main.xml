@@ -117,7 +117,7 @@
                 android:layout_weight="1">
             <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="0.5"
                     android:orientation="vertical">
 
@@ -128,9 +128,10 @@
                         android:background="#FFFFFF">
 
                     <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/player1Name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="player 1 name"/>
+                            android:hint="Player 1 Name"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -140,10 +141,20 @@
                         android:background="#FFFFFF">
 
                     <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/player2Name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="player 2 name"/>
+                            android:hint="Player 2 Name"/>
                 </com.google.android.material.textfield.TextInputLayout>
+                <TextView
+                        android:text=""
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/turnView"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:background="@android:color/holo_green_light"                />
 
             </LinearLayout>
             <Button
@@ -153,9 +164,10 @@
                     android:layout_weight="0.25"
                     android:layout_marginLeft="3dp"
                     android:layout_marginRight="3dp"
-                    android:text="START/RESTART"
+                    android:text="START"
                     app:cornerRadius="0dp"
             />
+
 
         </LinearLayout>
 
