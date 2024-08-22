@@ -3,6 +3,7 @@ package com.example.tic_tac_toe
 import android.graphics.Color
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -10,6 +11,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.textfield.TextInputEditText
+import android.graphics.drawable.Drawable
+import androidx.core.content.ContextCompat
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var case0: Button
@@ -108,15 +112,15 @@ class MainActivity : AppCompatActivity() {
                 grid[row][col] = 0
             }
         }
-        case0.setText("")
-        case1.setText("")
-        case2.setText("")
-        case3.setText("")
-        case4.setText("")
-        case5.setText("")
-        case6.setText("")
-        case7.setText("")
-        case8.setText("")
+        case0.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
+        case1.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
+        case2.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
+        case3.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
+        case4.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
+        case5.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
+        case6.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
+        case7.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
+        case8.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
         win = false
         start.text = "RESET"
         turnCount = 0
@@ -127,15 +131,16 @@ class MainActivity : AppCompatActivity() {
             return
         }
         if(turnCount % 2 == 0 ) {
-            button.setText("X")
+            val drawableTop = ContextCompat.getDrawable(this, R.drawable.cross)
+            button.setCompoundDrawablesWithIntrinsicBounds(null, drawableTop, null, null)
             grid[index0][index1] = 1
         }else{
-            button.setText("O")
+            val drawableTop = ContextCompat.getDrawable(this, R.drawable.circle)
+            button.setCompoundDrawablesWithIntrinsicBounds(null, drawableTop, null, null)
             grid[index0][index1] = -1
         }
         turnCount++
-        drawCheck()
-        winCheck()
+        if(!winCheck()) drawCheck()
         playerTurn()
     }
     private fun drawCheck (){
@@ -151,40 +156,41 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this@MainActivity, "DRAW", Toast.LENGTH_SHORT).show()
         }
     }
-    private fun winCheck(){
+    private fun winCheck(): Boolean {
         for (row in grid.indices) {
             var count = 0
             for (col in grid[row].indices) {
                 count = grid[row][col] + count
             }
-            countCheck(count)
+            if(countCheck(count)) return true
         }
         for (col in grid.indices) {
             var count = 0
             for (row in grid[col].indices) {
                 count = grid[row][col] + count
             }
-            countCheck(count)
+            if(countCheck(count)) return true
         }
         var count = 0
         for(i in 2 downTo 0){
             count = count + grid[i][i]
         }
-        countCheck(count)
+        if(countCheck(count)) return true
         count = 0
         for(i in 2 downTo 0){
             count = count + grid[i][2-i]
         }
-        countCheck(count)
+        if(countCheck(count)) return true
+        return false
     }
-    private fun countCheck(count: Int){
+    private fun countCheck(count: Int): Boolean {
         var player1Win = "Winner is " + player1Name
         var player2Win = "Winner is " + player2Name
         if(count == 3){
             Toast.makeText(this@MainActivity,player1Win , Toast.LENGTH_SHORT).show()
             win = true
             start.text = "RESTART"
-            return
+            return true
         }
         if(count == -3){
             Toast.makeText(this@MainActivity, player2Win, Toast.LENGTH_SHORT).show()
@@ -193,8 +199,9 @@ class MainActivity : AppCompatActivity() {
             var player1Temp = player1Name
             player1Name = player2Name
             player2Name = player1Temp
-            return
+            return true
         }
+        return false
     }
     private fun playerTurn(){
         if(turnCount % 2 == 0){
